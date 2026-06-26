@@ -1,0 +1,954 @@
+at > /mnt/user-data/outputs/index.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Studio-F">
+<meta name="theme-color" content="#0a0a0a">
+<title>Studio-F Functional Fitness</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --black:#0a0a0a;--dark:#111114;--surface:#1a1a1f;--border:#2a2a32;
+  --silver:#c8cdd6;--silver-dim:#7a8090;--white:#f0f2f5;
+  --green:#22c55e;--yellow:#eab308;--red:#ef4444;--blue:#60a5fa;
+  --safe-top:env(safe-area-inset-top,44px);--safe-bottom:env(safe-area-inset-bottom,20px);
+}
+html,body{height:100%;overflow:hidden;background:var(--black)}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--white);display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative}
+.screen{display:none;flex-direction:column;height:100vh;overflow:hidden}
+.screen.active{display:flex}
+::-webkit-scrollbar{display:none}
+
+/* LOGIN */
+#screen-login{background:var(--black);justify-content:flex-end;padding-bottom:calc(var(--safe-bottom) + 32px)}
+.login-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;background:radial-gradient(ellipse at 50% 30%,#2a2a35 0%,var(--black) 70%)}
+.logo-area{display:flex;flex-direction:column;align-items:center;margin-bottom:8px}
+.logo-img{width:120px;height:120px;object-fit:contain;border-radius:16px;margin-bottom:16px}
+.logo-placeholder{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#3a3a45,#1a1a22);border:2px solid #3a3a45;display:flex;align-items:center;justify-content:center;font-size:52px;margin-bottom:16px;box-shadow:0 0 40px #ffffff10}
+.login-brand{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:800;letter-spacing:2px;color:var(--white);text-align:center;line-height:1}
+.login-sub{font-size:11px;letter-spacing:4px;color:var(--silver-dim);text-transform:uppercase;margin-top:6px;text-align:center}
+.login-form{padding:0 24px}
+.login-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;color:var(--white);font-size:16px;font-family:'Inter',sans-serif;margin-bottom:14px;outline:none;transition:border-color .2s}
+.login-input:focus{border-color:var(--silver)}
+.login-label{font-size:11px;font-weight:600;color:var(--silver-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;display:block}
+.btn-login{width:100%;padding:16px;background:linear-gradient(135deg,#c8cdd6,#8a9099);border:none;border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px;color:var(--black);cursor:pointer}
+.btn-login:active{opacity:.85}
+.login-error{color:var(--red);font-size:13px;text-align:center;margin-top:10px;min-height:18px}
+
+/* TOPBAR */
+.topbar{padding:calc(var(--safe-top) + 8px) 18px 12px;background:var(--black);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-logo{width:36px;height:36px;object-fit:contain;border-radius:6px}
+.topbar-logo-placeholder{font-size:22px}
+.topbar-info{flex:1;padding:0 12px}
+.topbar-brand{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:1.5px;color:var(--white)}
+.topbar-role{font-size:10px;color:var(--silver-dim);letter-spacing:2px;text-transform:uppercase;margin-top:1px}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3a3a45,#252530);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer}
+
+/* BOTTOM NAV */
+.bottom-nav{display:flex;background:var(--black);border-top:1px solid var(--border);padding-bottom:var(--safe-bottom);flex-shrink:0}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0 6px;cursor:pointer;background:none;border:none;color:var(--silver-dim);font-family:'Inter',sans-serif;transition:color .15s}
+.nav-item.active{color:var(--silver)}
+.nav-icon{font-size:20px;margin-bottom:3px}
+.nav-label{font-size:10px;letter-spacing:.5px;font-weight:500}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:var(--silver);margin:0 auto 3px}
+
+/* CONTENT */
+.scroll-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px calc(var(--safe-bottom) + 8px)}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:1px;color:var(--white);margin-bottom:4px}
+.section-sub{font-size:12px;color:var(--silver-dim);margin-bottom:20px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 14px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-accent,var(--silver))}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:var(--card-accent,var(--white));line-height:1}
+.stat-label{font-size:11px;color:var(--silver-dim);margin-top:4px;letter-spacing:.5px}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start}
+.card-name{font-weight:600;font-size:15px;color:var(--white)}
+.card-meta{font-size:12px;color:var(--silver-dim);margin-top:3px}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:#22c55e20;color:var(--green)}
+.badge-yellow{background:#eab30820;color:var(--yellow)}
+.badge-red{background:#ef444420;color:var(--red)}
+.badge-silver{background:#c8cdd620;color:var(--silver)}
+.badge-blue{background:#3b82f620;color:var(--blue)}
+
+/* CLASS PILLS */
+.class-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.class-pill{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
+
+/* BLOCK */
+.block{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden}
+.block-title{padding:14px 16px 10px;font-size:11px;font-weight:600;color:var(--silver-dim);letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.block-row{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.block-row:last-child{border-bottom:none}
+.block-row-label{font-size:13px;color:var(--silver-dim)}
+.block-row-value{font-size:14px;font-weight:600;color:var(--white);text-align:right}
+
+/* PAYMENTS */
+.pay-row{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.pay-row:last-child{border-bottom:none}
+.pay-concept{font-size:13px;font-weight:600;color:var(--white)}
+.pay-date{font-size:11px;color:var(--silver-dim);margin-top:2px}
+.pay-amount{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700}
+
+/* BUTTONS */
+.btn{border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;transition:opacity .15s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:active{opacity:.75}
+.btn-primary{background:linear-gradient(135deg,#c8cdd6,#8a9099);color:var(--black);padding:14px 20px;width:100%;border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-size:17px;letter-spacing:1px;font-weight:700}
+.btn-sm{background:var(--surface);border:1px solid var(--border);color:var(--silver);padding:7px 14px;font-size:12px;border-radius:8px}
+.btn-sm-green{background:#22c55e20;border:1px solid #22c55e40;color:var(--green);padding:7px 14px;font-size:12px;border-radius:8px}
+.btn-sm-red{background:#ef444420;border:1px solid #ef444440;color:var(--red);padding:7px 14px;font-size:12px;border-radius:8px}
+.btn-ghost{background:none;border:1px solid var(--border);color:var(--silver-dim);padding:12px 20px;font-size:14px;border-radius:10px}
+.btn-danger{background:#ef444420;border:1px solid #ef444440;color:var(--red);padding:10px 20px;font-size:14px;border-radius:10px;width:100%}
+.fab{position:fixed;bottom:calc(var(--safe-bottom) + 72px);right:18px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#c8cdd6,#8a9099);border:none;cursor:pointer;font-size:24px;color:var(--black);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px #00000060;z-index:10}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:#000000cc;display:none;align-items:flex-end;z-index:100}
+.modal-overlay.open{display:flex}
+.modal{width:100%;max-width:430px;margin:0 auto;background:var(--dark);border-top:1px solid var(--border);border-radius:24px 24px 0 0;padding:20px 20px calc(var(--safe-bottom) + 20px);max-height:88vh;overflow-y:auto}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;letter-spacing:1px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-label{font-size:11px;font-weight:600;color:var(--silver-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;display:block}
+.form-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 14px;color:var(--white);font-size:16px;font-family:'Inter',sans-serif;outline:none}
+.form-input:focus{border-color:var(--silver)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a8090' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.class-toggle-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.class-toggle{padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--silver-dim);cursor:pointer;font-size:13px;font-weight:600;text-align:center;transition:all .15s}
+.class-toggle.selected{background:#c8cdd620;border-color:var(--silver);color:var(--white)}
+
+/* DETAIL */
+.detail-header{padding:calc(var(--safe-top) + 8px) 18px 14px;background:var(--black);border-bottom:1px solid var(--border);flex-shrink:0}
+.detail-back{font-size:13px;color:var(--silver-dim);margin-bottom:8px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;background:none;border:none}
+.detail-name{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:1px}
+.detail-sub{font-size:12px;color:var(--silver-dim);margin-top:2px}
+.tab-row{display:flex;gap:6px;padding:14px 16px 0;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+.tab{padding:8px 16px 12px;font-size:13px;font-weight:600;color:var(--silver-dim);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+.tab.active{color:var(--white);border-bottom-color:var(--silver)}
+
+/* PROGRESS */
+.prog-bar{background:var(--border);border-radius:4px;height:5px;margin-top:8px;overflow:hidden}
+.prog-fill{height:5px;border-radius:4px;background:linear-gradient(90deg,#8a9099,#c8cdd6);transition:width .3s}
+
+/* PENDING BANNER */
+.pending-banner{background:#eab30810;border:1px solid #eab30830;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pending-name{font-size:13px;font-weight:600}
+.pending-info{font-size:11px;color:var(--silver-dim);margin-top:2px}
+
+/* CLIENT */
+.client-hello{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;letter-spacing:1px;margin-bottom:4px}
+.client-sub{font-size:13px;color:var(--silver-dim);margin-bottom:22px}
+.big-status-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;text-align:center}
+.big-status-icon{font-size:40px;margin-bottom:10px}
+.big-status-label{font-size:12px;color:var(--silver-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.big-status-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800}
+
+/* SETTINGS */
+.settings-section{margin-bottom:24px}
+.settings-section-title{font-size:11px;font-weight:600;color:var(--silver-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.logo-upload-area{background:var(--surface);border:2px dashed var(--border);border-radius:14px;padding:28px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:14px}
+.logo-upload-area:hover{border-color:var(--silver)}
+.logo-preview{width:100px;height:100px;object-fit:contain;border-radius:12px;margin:0 auto 10px;display:block}
+.logo-upload-hint{font-size:13px;color:var(--silver-dim)}
+
+/* TOAST */
+.toast{position:fixed;top:calc(var(--safe-top) + 56px);left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:16px 0}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════ LOGIN ══════════════════ -->
+<div class="screen active" id="screen-login">
+  <div class="login-hero">
+    <div class="logo-area">
+      <img id="login-logo-img" class="logo-img" src="" alt="" style="display:none">
+      <div id="login-logo-placeholder" class="logo-placeholder">🏋️</div>
+    </div>
+    <div class="login-brand" id="login-gym-name">STUDIO-F</div>
+    <div class="login-sub">Functional Fitness</div>
+  </div>
+  <div class="login-form">
+    <label class="login-label">Correo</label>
+    <input class="login-input" id="login-email" type="email" placeholder="correo@ejemplo.com" autocomplete="email">
+    <label class="login-label">Contraseña</label>
+    <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password">
+    <button class="btn-login" onclick="doLogin()">ENTRAR</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ MAIN APP ══════════════════ -->
+<div class="screen" id="screen-app">
+  <div class="topbar">
+    <img id="topbar-logo-img" class="topbar-logo" src="" alt="" style="display:none">
+    <div id="topbar-logo-placeholder" class="topbar-logo-placeholder">🏋️</div>
+    <div class="topbar-info">
+      <div class="topbar-brand" id="topbar-gym-name">STUDIO-F</div>
+      <div class="topbar-role" id="topbar-role">ADMIN</div>
+    </div>
+    <div class="topbar-avatar" onclick="doLogout()">👤</div>
+  </div>
+
+  <div style="flex:1;overflow:hidden;position:relative;">
+
+    <!-- HOME -->
+    <div class="scroll-content" id="tab-home" style="display:block;">
+      <div id="home-admin" style="display:none;">
+        <div class="section-title" id="home-greeting">Panel</div>
+        <div class="section-sub" id="home-date"></div>
+        <div class="stats-grid">
+          <div class="stat-card" style="--card-accent:#c8cdd6"><div class="stat-num" id="stat-members">0</div><div class="stat-label">Miembros activos</div></div>
+          <div class="stat-card" style="--card-accent:#22c55e"><div class="stat-num" id="stat-revenue">$0</div><div class="stat-label">Total cobrado</div></div>
+          <div class="stat-card" style="--card-accent:#eab308"><div class="stat-num" id="stat-pend">0</div><div class="stat-label">Pagos pendientes</div></div>
+          <div class="stat-card" style="--card-accent:#60a5fa"><div class="stat-num" id="stat-classes">0</div><div class="stat-label">Clases activas</div></div>
+        </div>
+        <div class="section-title" style="font-size:16px;margin-bottom:12px;">⚠️ Por cobrar</div>
+        <div id="pending-list"></div>
+      </div>
+      <div id="home-client" style="display:none;">
+        <div class="client-hello" id="client-hello">Hola!</div>
+        <div class="client-sub">Tu resumen de hoy</div>
+        <div class="big-status-card">
+          <div class="big-status-icon" id="client-status-icon">✅</div>
+          <div class="big-status-label">Estado de membresía</div>
+          <div class="big-status-val" id="client-status-val">Activo</div>
+        </div>
+        <div class="block">
+          <div class="block-title">Mi cuenta</div>
+          <div class="block-row"><span class="block-row-label">Plan</span><span class="block-row-value" id="client-plan">—</span></div>
+          <div class="block-row"><span class="block-row-label">Miembro desde</span><span class="block-row-value" id="client-since">—</span></div>
+        </div>
+        <div class="section-title" style="font-size:16px;margin-bottom:10px;">Mis clases</div>
+        <div id="client-classes-list"></div>
+      </div>
+    </div>
+
+    <!-- MEMBERS -->
+    <div class="scroll-content" id="tab-members" style="display:none;">
+      <div class="section-title">Miembros</div>
+      <div class="section-sub" id="members-count"></div>
+      <input class="form-input" id="member-search" placeholder="🔍 Buscar nombre o teléfono..." oninput="renderMembers()" style="margin-bottom:14px;">
+      <div id="member-list"></div>
+    </div>
+
+    <!-- CLASSES -->
+    <div class="scroll-content" id="tab-classes" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">
+        <div><div class="section-title">Clases</div><div class="section-sub" style="margin-bottom:0">Horarios y capacidad</div></div>
+        <button id="btn-add-class" class="btn btn-sm" onclick="openAddClass()" style="display:none;margin-top:4px;">+ Clase</button>
+      </div>
+      <div id="class-list"></div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div class="scroll-content" id="tab-payments" style="display:none;">
+      <div class="section-title">Pagos</div>
+      <div class="section-sub">Historial completo</div>
+      <div class="stats-grid" style="margin-bottom:16px;">
+        <div class="stat-card" style="--card-accent:#22c55e"><div class="stat-num" id="pay-total">$0</div><div class="stat-label">Total cobrado</div></div>
+        <div class="stat-card" style="--card-accent:#eab308"><div class="stat-num" id="pay-pending">$0</div><div class="stat-label">Por cobrar</div></div>
+      </div>
+      <div id="payments-list"></div>
+    </div>
+
+    <!-- SETTINGS (admin only) -->
+    <div class="scroll-content" id="tab-settings" style="display:none;">
+      <div class="section-title">Configuración</div>
+      <div class="section-sub">Solo visible para el administrador</div>
+
+      <!-- Logo -->
+      <div class="settings-section">
+        <div class="settings-section-title">Logo del gym</div>
+        <div class="logo-upload-area" onclick="document.getElementById('logo-file-input').click()">
+          <img id="settings-logo-preview" class="logo-preview" src="" style="display:none">
+          <div id="settings-logo-icon" style="font-size:40px;margin-bottom:8px;">🏋️</div>
+          <div class="logo-upload-hint">Toca para subir tu logo<br><span style="font-size:11px;color:var(--border)">PNG o JPG recomendado</span></div>
+        </div>
+        <input type="file" id="logo-file-input" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
+        <button class="btn btn-sm" onclick="removeLogo()" id="btn-remove-logo" style="display:none;margin-bottom:14px;">Quitar logo</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Gym name -->
+      <div class="settings-section">
+        <div class="settings-section-title">Nombre del gym</div>
+        <div class="form-group">
+          <input class="form-input" id="settings-gym-name" placeholder="STUDIO-F">
+        </div>
+        <button class="btn btn-sm" onclick="saveGymName()">Guardar nombre</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Plans -->
+      <div class="settings-section">
+        <div class="settings-section-title">Planes de membresía</div>
+        <div id="plans-list"></div>
+        <button class="btn btn-sm" onclick="openAddPlan()">+ Agregar plan</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Staff -->
+      <div class="settings-section">
+        <div class="settings-section-title">Colaboradores</div>
+        <div id="staff-list"></div>
+        <button class="btn btn-sm" onclick="openAddStaff()">+ Agregar colaborador</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Admin password -->
+      <div class="settings-section">
+        <div class="settings-section-title">Cambiar contraseña admin</div>
+        <div class="form-group"><input class="form-input" id="new-admin-pass" type="password" placeholder="Nueva contraseña"></div>
+        <button class="btn btn-sm" onclick="changeAdminPass()">Guardar contraseña</button>
+      </div>
+
+      <div style="height:20px;"></div>
+      <button class="btn btn-danger" onclick="doLogout()">Cerrar sesión</button>
+      <div style="height:40px;"></div>
+    </div>
+
+    <!-- CLIENT PAYMENTS -->
+    <div class="scroll-content" id="tab-account" style="display:none;">
+      <div class="section-title">Mis pagos</div>
+      <div class="section-sub">Historial de tu cuenta</div>
+      <div id="client-payments-list"></div>
+    </div>
+
+    <!-- MEMBER DETAIL -->
+    <div id="screen-member-detail" style="display:none;flex-direction:column;height:100%;background:var(--dark);position:absolute;inset:0;z-index:20;overflow:hidden;">
+      <div class="detail-header">
+        <button class="detail-back" onclick="closeMemberDetail()">← Volver</button>
+        <div class="detail-name" id="detail-name">—</div>
+        <div class="detail-sub" id="detail-sub">—</div>
+      </div>
+      <div class="tab-row" id="detail-tabs">
+        <button class="tab active" onclick="switchDetailTab('info')">Información</button>
+        <button class="tab" onclick="switchDetailTab('payments')">Pagos</button>
+      </div>
+      <div class="scroll-content" id="detail-info-tab">
+        <div class="block" id="detail-info-block"></div>
+        <div class="section-title" style="font-size:14px;margin:16px 0 10px;">Clases inscritas</div>
+        <div id="detail-classes-block"></div>
+        <div style="margin-top:20px;" id="detail-admin-actions"></div>
+      </div>
+      <div class="scroll-content" id="detail-payments-tab" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div>
+            <div style="font-size:12px;color:var(--silver-dim);">Total cobrado</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--green);" id="detail-total">$0</div>
+          </div>
+          <button class="btn btn-sm" onclick="openAddPayment()" id="btn-add-payment" style="display:none;">+ Pago</button>
+        </div>
+        <div class="block" id="detail-payments-block"></div>
+      </div>
+    </div>
+
+  </div>
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+</div>
+
+<!-- MODAL: Add Member -->
+<div class="modal-overlay" id="modal-add-member">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nuevo miembro</div>
+    <div class="form-group"><label class="form-label">Nombre completo *</label><input class="form-input" id="new-name" placeholder="Nombre Apellido"></div>
+    <div class="form-group"><label class="form-label">Teléfono *</label><input class="form-input" id="new-phone" type="tel" placeholder="55 1234 5678"></div>
+    <div class="form-group"><label class="form-label">Email (para login)</label><input class="form-input" id="new-email" type="email" placeholder="correo@ejemplo.com"></div>
+    <div class="form-group"><label class="form-label">Contraseña de acceso</label><input class="form-input" id="new-client-pass" type="password" placeholder="Contraseña para el cliente"></div>
+    <div class="form-group"><label class="form-label">Plan</label>
+      <select class="form-input form-select" id="new-plan"></select>
+    </div>
+    <div class="form-group"><label class="form-label">Clases</label>
+      <div class="class-toggle-grid" id="new-class-toggles"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="submitAddMember()">REGISTRAR</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-member')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Payment -->
+<div class="modal-overlay" id="modal-add-payment">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Registrar pago</div>
+    <div style="font-size:13px;color:var(--silver-dim);margin-bottom:16px;" id="pay-modal-member-name">—</div>
+    <div class="form-group"><label class="form-label">Concepto *</label><input class="form-input" id="pay-concept" placeholder="Mensualidad Julio..."></div>
+    <div class="form-group"><label class="form-label">Monto ($) *</label><input class="form-input" id="pay-amount" type="number" placeholder="550"></div>
+    <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" id="pay-date" type="date"></div>
+    <div class="form-group"><label class="form-label">Estado</label>
+      <select class="form-input form-select" id="pay-status">
+        <option value="pagado">Pagado ✅</option>
+        <option value="pendiente">Pendiente ⏳</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="submitAddPayment()">GUARDAR</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-payment')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Staff -->
+<div class="modal-overlay" id="modal-add-staff">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nuevo colaborador</div>
+    <div class="form-group"><label class="form-label">Nombre *</label><input class="form-input" id="staff-name" placeholder="Nombre Apellido"></div>
+    <div class="form-group"><label class="form-label">Email *</label><input class="form-input" id="staff-email" type="email" placeholder="correo@ejemplo.com"></div>
+    <div class="form-group"><label class="form-label">Contraseña *</label><input class="form-input" id="staff-pass" type="password" placeholder="Contraseña de acceso"></div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="submitAddStaff()">AGREGAR</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-staff')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Plan -->
+<div class="modal-overlay" id="modal-add-plan">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nuevo plan</div>
+    <div class="form-group"><label class="form-label">Nombre del plan *</label><input class="form-input" id="plan-name" placeholder="Ej: Esencial Hyrox"></div>
+    <div class="form-group"><label class="form-label">Precio ($) *</label><input class="form-input" id="plan-price" type="number" placeholder="550"></div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="submitAddPlan()">GUARDAR</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-plan')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Class -->
+<div class="modal-overlay" id="modal-add-class">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nueva clase</div>
+    <div class="form-group"><label class="form-label">Nombre *</label><input class="form-input" id="class-name" placeholder="Ej: Hyrox Training"></div>
+    <div class="form-group"><label class="form-label">Instructor *</label><input class="form-input" id="class-instructor" placeholder="Nombre del instructor"></div>
+    <div class="form-group"><label class="form-label">Horario</label><input class="form-input" id="class-schedule" placeholder="Lun/Mié/Vie 7:00am"></div>
+    <div class="form-group"><label class="form-label">Capacidad máxima</label><input class="form-input" id="class-capacity" type="number" placeholder="20"></div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="submitAddClass()">GUARDAR</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-class')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  PERSISTENT STORAGE (localStorage)
+// ══════════════════════════════════════════
+function save(key, val){ try{ localStorage.setItem('sf_'+key, JSON.stringify(val)); }catch(e){} }
+function load(key, def){ try{ const v=localStorage.getItem('sf_'+key); return v!==null?JSON.parse(v):def; }catch(e){ return def; } }
+
+// ══════════════════════════════════════════
+//  DEFAULT DATA
+// ══════════════════════════════════════════
+const DEFAULT_CLASSES = [
+  {id:1,name:'Hyrox Training',instructor:'Camila Flores',schedule:'Lun/Mié/Vie 7:00am',capacity:20,color:'#c8cdd6'},
+  {id:2,name:'Functional Fitness',instructor:'Lucia',schedule:'Mar/Jue 9:00am',capacity:15,color:'#60a5fa'},
+  {id:3,name:'Strength',instructor:'Camila Flores',schedule:'Lun/Mié/Vie 6:00pm',capacity:12,color:'#f87171'},
+];
+const DEFAULT_PLANS = [
+  {id:'esencial',name:'Esencial Hyrox',price:550},
+  {id:'full',name:'Full Hyrox',price:750},
+];
+const DEFAULT_STAFF = [
+  {id:'s1',name:'Camila Flores',email:'camila@studiof.com',pass:'camila123',role:'staff'},
+  {id:'s2',name:'Lucia',email:'lucia@studiof.com',pass:'lucia123',role:'staff'},
+];
+const ADMIN_USER = {email:'carlos.fm85@hotmail.com',pass:'carlos1234',role:'admin',name:'Carlos'};
+
+// ══════════════════════════════════════════
+//  STATE (loaded from localStorage)
+// ══════════════════════════════════════════
+let gymName   = load('gymName','STUDIO-F');
+let gymLogo   = load('gymLogo',null);         // base64
+let classes   = load('classes', DEFAULT_CLASSES);
+let plans     = load('plans',   DEFAULT_PLANS);
+let staffList = load('staff',   DEFAULT_STAFF);
+let members   = load('members', []);
+let adminPass = load('adminPass', ADMIN_USER.pass);
+
+const today = new Date().toISOString().split('T')[0];
+let currentUser   = null;
+let currentTab    = 'home';
+let detailMemberId = null;
+let detailTab     = 'info';
+
+// ══════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════
+function getAllUsers(){
+  const users = [{...ADMIN_USER, pass:adminPass}];
+  staffList.forEach(s=>users.push(s));
+  members.forEach(m=>{ if(m.email&&m.clientPass) users.push({email:m.email,pass:m.clientPass,role:'client',name:m.name,memberId:m.id}); });
+  return users;
+}
+
+function doLogin(){
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('login-pass').value;
+  const user  = getAllUsers().find(u=>u.email.toLowerCase()===email && u.pass===pass);
+  if(!user){ document.getElementById('login-error').textContent='Correo o contraseña incorrectos'; return; }
+  document.getElementById('login-error').textContent='';
+  currentUser = user;
+  document.getElementById('topbar-role').textContent = user.role==='admin'?'ADMINISTRADOR':user.role==='staff'?'COLABORADOR':'MIEMBRO';
+  applyBranding();
+  buildNav();
+  switchTab('home');
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+}
+
+function doLogout(){
+  currentUser=null;
+  document.getElementById('screen-app').classList.remove('active');
+  document.getElementById('screen-login').classList.add('active');
+  document.getElementById('login-email').value='';
+  document.getElementById('login-pass').value='';
+}
+
+// ══════════════════════════════════════════
+//  BRANDING
+// ══════════════════════════════════════════
+function applyBranding(){
+  // gym name
+  document.getElementById('login-gym-name').textContent  = gymName;
+  document.getElementById('topbar-gym-name').textContent = gymName;
+  if(document.getElementById('settings-gym-name')) document.getElementById('settings-gym-name').value = gymName;
+  // logo
+  if(gymLogo){
+    ['login-logo-img','topbar-logo-img'].forEach(id=>{ const el=document.getElementById(id); el.src=gymLogo; el.style.display='block'; });
+    document.getElementById('login-logo-placeholder').style.display='none';
+    document.getElementById('topbar-logo-placeholder').style.display='none';
+    const prev=document.getElementById('settings-logo-preview');
+    if(prev){ prev.src=gymLogo; prev.style.display='block'; document.getElementById('settings-logo-icon').style.display='none'; }
+    const btnRm=document.getElementById('btn-remove-logo');
+    if(btnRm) btnRm.style.display='inline-flex';
+  } else {
+    ['login-logo-img','topbar-logo-img'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('login-logo-placeholder').style.display='flex';
+    document.getElementById('topbar-logo-placeholder').style.display='block';
+    const prev=document.getElementById('settings-logo-preview');
+    if(prev){ prev.style.display='none'; document.getElementById('settings-logo-icon').style.display='block'; }
+    const btnRm=document.getElementById('btn-remove-logo');
+    if(btnRm) btnRm.style.display='none';
+  }
+}
+applyBranding();
+
+// ══════════════════════════════════════════
+//  NAV
+// ══════════════════════════════════════════
+function buildNav(){
+  const nav=document.getElementById('bottom-nav');
+  let tabs=[];
+  if(currentUser.role==='admin') tabs=[
+    {id:'home',icon:'⊞',label:'Panel'},
+    {id:'members',icon:'👥',label:'Miembros'},
+    {id:'classes',icon:'🏋️',label:'Clases'},
+    {id:'payments',icon:'💳',label:'Pagos'},
+    {id:'settings',icon:'⚙️',label:'Config'},
+  ];
+  else if(currentUser.role==='staff') tabs=[
+    {id:'home',icon:'⊞',label:'Panel'},
+    {id:'members',icon:'👥',label:'Miembros'},
+    {id:'classes',icon:'🏋️',label:'Clases'},
+  ];
+  else tabs=[
+    {id:'home',icon:'🏠',label:'Inicio'},
+    {id:'classes',icon:'🏋️',label:'Clases'},
+    {id:'account',icon:'💳',label:'Mis pagos'},
+  ];
+  nav.innerHTML=tabs.map(t=>`
+    <button class="nav-item${currentTab===t.id?' active':''}" onclick="switchTab('${t.id}')">
+      ${currentTab===t.id?'<div class="nav-dot"></div>':''}
+      <div class="nav-icon">${t.icon}</div>
+      <div class="nav-label">${t.label}</div>
+    </button>`).join('');
+}
+
+function switchTab(tab){
+  currentTab=tab;
+  ['home','members','classes','payments','settings','account'].forEach(t=>{
+    const el=document.getElementById('tab-'+t);
+    if(el) el.style.display=t===tab?'block':'none';
+  });
+  document.getElementById('screen-member-detail').style.display='none';
+  hideFab();
+  buildNav();
+  renderTab(tab);
+}
+
+function renderTab(tab){
+  if(tab==='home')     renderHome();
+  if(tab==='members')  renderMembers();
+  if(tab==='classes')  renderClasses();
+  if(tab==='payments') renderPayments();
+  if(tab==='settings') renderSettings();
+  if(tab==='account')  renderClientAccount();
+}
+
+// ══════════════════════════════════════════
+//  HOME
+// ══════════════════════════════════════════
+function renderHome(){
+  const isClient=currentUser.role==='client';
+  document.getElementById('home-admin').style.display=isClient?'none':'block';
+  document.getElementById('home-client').style.display=isClient?'block':'none';
+  if(!isClient){
+    const d=new Date();
+    document.getElementById('home-greeting').textContent=greet()+', '+currentUser.name;
+    document.getElementById('home-date').textContent=d.toLocaleDateString('es-MX',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    document.getElementById('stat-members').textContent=members.filter(m=>m.active).length;
+    document.getElementById('stat-classes').textContent=classes.length;
+    const allP=members.flatMap(m=>m.payments);
+    document.getElementById('stat-revenue').textContent='$'+allP.filter(p=>p.status==='pagado').reduce((s,p)=>s+p.amount,0).toLocaleString();
+    document.getElementById('stat-pend').textContent=allP.filter(p=>p.status==='pendiente').length;
+    const pendItems=members.flatMap(m=>m.payments.filter(p=>p.status==='pendiente').map(p=>({...p,mName:m.name,mId:m.id})));
+    document.getElementById('pending-list').innerHTML=pendItems.length===0
+      ?'<div style="color:var(--silver-dim);font-size:13px;text-align:center;padding:16px;">✅ Sin pagos pendientes</div>'
+      :pendItems.map(p=>`<div class="pending-banner"><div><div class="pending-name">${p.mName}</div><div class="pending-info">${p.concept} · $${p.amount.toLocaleString()}</div></div><button class="btn btn-sm-green" onclick="markPaid(${p.mId},${p.id});renderHome()">Cobrar</button></div>`).join('');
+  } else {
+    const m=members.find(m=>m.id===currentUser.memberId);
+    if(!m) return;
+    document.getElementById('client-hello').textContent=greet()+', '+m.name.split(' ')[0]+'!';
+    document.getElementById('client-status-icon').textContent=m.active?'✅':'❌';
+    document.getElementById('client-status-val').textContent=m.active?'Activo':'Inactivo';
+    const plan=plans.find(p=>p.id===m.plan)||{name:m.plan};
+    document.getElementById('client-plan').textContent=plan.name+' $'+((plans.find(p=>p.id===m.plan)||{}).price||'');
+    document.getElementById('client-since').textContent=new Date(m.joined).toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
+    document.getElementById('client-classes-list').innerHTML=m.classes.length===0
+      ?'<div style="color:var(--silver-dim);font-size:13px;">Sin clases asignadas</div>'
+      :m.classes.map(cid=>{const c=classes.find(cl=>cl.id===cid);return c?`<div class="card" style="border-left:3px solid ${c.color};margin-bottom:10px;"><div class="card-name" style="color:${c.color}">${c.name}</div><div class="card-meta">${c.instructor} · ${c.schedule}</div></div>`:''}).join('');
+  }
+}
+
+function greet(){ const h=new Date().getHours(); return h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches'; }
+
+// ══════════════════════════════════════════
+//  MEMBERS
+// ══════════════════════════════════════════
+function renderMembers(){
+  const q=(document.getElementById('member-search')?.value||'').toLowerCase();
+  const list=members.filter(m=>m.name.toLowerCase().includes(q)||m.phone.includes(q));
+  document.getElementById('members-count').textContent=list.length+' miembro'+(list.length!==1?'s':'');
+  document.getElementById('member-list').innerHTML=list.map(m=>{
+    const plan=plans.find(p=>p.id===m.plan)||{name:m.plan||'—'};
+    return`<div class="card" onclick="openMemberDetail(${m.id})" style="cursor:pointer;">
+      <div class="card-header">
+        <div><div class="card-name">${m.name}</div><div class="card-meta">${m.phone}${m.email?' · '+m.email:''}</div></div>
+        <span class="badge ${m.active?'badge-green':'badge-red'}">${m.active?'Activo':'Inactivo'}</span>
+      </div>
+      <div class="class-pills">
+        ${m.classes.map(cid=>{const c=classes.find(cl=>cl.id===cid);return c?`<span class="class-pill" style="border-color:${c.color}40;color:${c.color}">${c.name}</span>`:''}).join('')}
+        <span class="badge badge-silver" style="margin-left:auto">${plan.name}</span>
+      </div>
+    </div>`;
+  }).join('');
+  // FAB
+  let fab=document.getElementById('fab-add-member');
+  if(!fab){
+    fab=document.createElement('button');
+    fab.className='fab';fab.id='fab-add-member';fab.innerHTML='＋';
+    fab.onclick=openAddMember;
+    document.body.appendChild(fab);
+  }
+  fab.style.display='flex';
+}
+
+// ══════════════════════════════════════════
+//  MEMBER DETAIL
+// ══════════════════════════════════════════
+function openMemberDetail(id){
+  detailMemberId=id; detailTab='info';
+  document.getElementById('screen-member-detail').style.display='flex';
+  hideFab();
+  renderMemberDetail();
+}
+function closeMemberDetail(){
+  document.getElementById('screen-member-detail').style.display='none';
+  renderMembers();
+}
+function switchDetailTab(tab){ detailTab=tab; renderMemberDetail(); }
+
+function renderMemberDetail(){
+  const m=members.find(m=>m.id===detailMemberId); if(!m) return;
+  document.getElementById('detail-name').textContent=m.name;
+  document.getElementById('detail-sub').textContent='Desde '+new Date(m.joined).toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
+  document.querySelectorAll('#detail-tabs .tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&detailTab==='info')||(i===1&&detailTab==='payments')));
+  document.getElementById('detail-info-tab').style.display=detailTab==='info'?'block':'none';
+  document.getElementById('detail-payments-tab').style.display=detailTab==='payments'?'block':'none';
+
+  const plan=plans.find(p=>p.id===m.plan)||{name:m.plan||'—'};
+  document.getElementById('detail-info-block').innerHTML=`
+    <div class="block-title">Datos del miembro</div>
+    <div class="block-row"><span class="block-row-label">Teléfono</span><span class="block-row-value">${m.phone}</span></div>
+    <div class="block-row"><span class="block-row-label">Email</span><span class="block-row-value">${m.email||'—'}</span></div>
+    <div class="block-row"><span class="block-row-label">Plan</span><span class="block-row-value">${plan.name}</span></div>
+    <div class="block-row"><span class="block-row-label">Estado</span><span class="block-row-value"><span class="badge ${m.active?'badge-green':'badge-red'}">${m.active?'Activo':'Inactivo'}</span></span></div>`;
+
+  document.getElementById('detail-classes-block').innerHTML=m.classes.length===0
+    ?'<div style="color:var(--silver-dim);font-size:13px;padding:4px;">Sin clases asignadas</div>'
+    :m.classes.map(cid=>{const c=classes.find(cl=>cl.id===cid);return c?`<div class="card" style="border-left:3px solid ${c.color};margin-bottom:8px;"><div class="card-name" style="color:${c.color}">${c.name}</div><div class="card-meta">${c.instructor} · ${c.schedule}</div></div>`:''}).join('');
+
+  if(currentUser.role==='admin'){
+    document.getElementById('detail-admin-actions').innerHTML=`
+      <button class="btn ${m.active?'btn-sm-red':'btn-sm-green'}" onclick="toggleMemberActive(${m.id})" style="margin-bottom:10px;width:100%;">${m.active?'⏸ Desactivar miembro':'▶ Activar miembro'}</button>
+      <button class="btn btn-danger" onclick="deleteMember(${m.id})">🗑 Eliminar miembro</button>`;
+  } else {
+    document.getElementById('detail-admin-actions').innerHTML='';
+  }
+
+  const paid=m.payments.filter(p=>p.status==='pagado').reduce((s,p)=>s+p.amount,0);
+  document.getElementById('detail-total').textContent='$'+paid.toLocaleString();
+  document.getElementById('btn-add-payment').style.display=currentUser.role==='admin'?'inline-flex':'none';
+  const pays=[...m.payments].reverse();
+  document.getElementById('detail-payments-block').innerHTML=pays.length===0
+    ?'<div class="block-row"><span class="block-row-label">Sin pagos registrados</span></div>'
+    :pays.map(p=>`<div class="pay-row">
+      <div><div class="pay-concept">${p.concept}</div><div class="pay-date">${new Date(p.date).toLocaleDateString('es-MX',{year:'numeric',month:'short',day:'numeric'})}</div></div>
+      <div style="text-align:right;">
+        <div class="pay-amount" style="color:${p.status==='pagado'?'var(--green)':'var(--yellow)'}">$${p.amount.toLocaleString()}</div>
+        ${p.status==='pendiente'&&currentUser.role==='admin'?`<button class="btn btn-sm-green" style="margin-top:6px;" onclick="markPaid(${m.id},${p.id});renderMemberDetail()">Cobrar</button>`:`<span class="badge ${p.status==='pagado'?'badge-green':'badge-yellow'}">${p.status}</span>`}
+      </div></div>`).join('');
+}
+
+function toggleMemberActive(id){
+  const m=members.find(m=>m.id===id); if(!m) return;
+  m.active=!m.active; save('members',members);
+  renderMemberDetail(); showToast(m.active?'✅ Miembro activado':'⏸ Miembro desactivado');
+}
+function deleteMember(id){
+  if(!confirm('¿Eliminar este miembro? Esta acción no se puede deshacer.')) return;
+  members=members.filter(m=>m.id!==id); save('members',members);
+  closeMemberDetail(); showToast('🗑 Miembro eliminado');
+}
+
+// ══════════════════════════════════════════
+//  CLASSES
+// ══════════════════════════════════════════
+function renderClasses(){
+  const btnAdd=document.getElementById('btn-add-class');
+  if(btnAdd) btnAdd.style.display=currentUser.role==='admin'?'inline-flex':'none';
+  document.getElementById('class-list').innerHTML=classes.map(c=>{
+    const enrolled=members.filter(m=>m.classes.includes(c.id));
+    const pct=Math.round((enrolled.length/c.capacity)*100);
+    return`<div class="card" style="border-left:3px solid ${c.color};margin-bottom:10px;">
+      <div class="card-header">
+        <div><div class="card-name" style="color:${c.color}">${c.name}</div><div class="card-meta">${c.instructor} · ${c.schedule}</div></div>
+        <span class="badge badge-silver">${enrolled.length}/${c.capacity}</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${c.color}"></div></div>
+      ${enrolled.length>0?`<div style="margin-top:8px;font-size:12px;color:var(--silver-dim);">${enrolled.map(m=>'• '+m.name).join('  ')}</div>`:'<div style="margin-top:8px;font-size:12px;color:var(--border);">Sin inscritos aún</div>'}
+      ${currentUser.role==='admin'?`<button class="btn btn-sm-red" style="margin-top:10px;font-size:11px;padding:5px 12px;" onclick="deleteClass(${c.id})">Eliminar clase</button>`:''}
+    </div>`;
+  }).join('');
+}
+function openAddClass(){ document.getElementById('class-name').value=''; document.getElementById('class-instructor').value=''; document.getElementById('class-schedule').value=''; document.getElementById('class-capacity').value=''; openModal('modal-add-class'); }
+function submitAddClass(){
+  const name=document.getElementById('class-name').value.trim();
+  const instructor=document.getElementById('class-instructor').value.trim();
+  if(!name||!instructor){ showToast('Nombre e instructor requeridos','#ef4444'); return; }
+  const colors=['#c8cdd6','#60a5fa','#f87171','#fbbf24','#a78bfa','#34d399'];
+  const color=colors[classes.length%colors.length];
+  classes.push({id:Date.now(),name,instructor,schedule:document.getElementById('class-schedule').value||'—',capacity:parseInt(document.getElementById('class-capacity').value)||20,color});
+  save('classes',classes); closeModal('modal-add-class'); renderClasses(); showToast('✅ Clase agregada');
+}
+function deleteClass(id){
+  if(!confirm('¿Eliminar esta clase?')) return;
+  classes=classes.filter(c=>c.id!==id); save('classes',classes); renderClasses(); showToast('🗑 Clase eliminada');
+}
+
+// ══════════════════════════════════════════
+//  PAYMENTS
+// ══════════════════════════════════════════
+function renderPayments(){
+  const allP=members.flatMap(m=>m.payments.map(p=>({...p,mName:m.name,mId:m.id}))).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  document.getElementById('pay-total').textContent='$'+allP.filter(p=>p.status==='pagado').reduce((s,p)=>s+p.amount,0).toLocaleString();
+  document.getElementById('pay-pending').textContent='$'+allP.filter(p=>p.status==='pendiente').reduce((s,p)=>s+p.amount,0).toLocaleString();
+  document.getElementById('payments-list').innerHTML=allP.map(p=>`
+    <div class="block" style="margin-bottom:10px;">
+      <div class="pay-row">
+        <div><div class="pay-concept">${p.mName}</div><div class="pay-date">${p.concept} · ${new Date(p.date).toLocaleDateString('es-MX',{month:'short',day:'numeric',year:'numeric'})}</div></div>
+        <div style="text-align:right;">
+          <div class="pay-amount" style="color:${p.status==='pagado'?'var(--green)':'var(--yellow)'}">$${p.amount.toLocaleString()}</div>
+          ${p.status==='pendiente'?`<button class="btn btn-sm-green" style="margin-top:6px;" onclick="markPaid(${p.mId},${p.id});renderPayments()">Cobrar</button>`:`<span class="badge badge-green">pagado</span>`}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+//  SETTINGS
+// ══════════════════════════════════════════
+function renderSettings(){
+  document.getElementById('settings-gym-name').value=gymName;
+  applyBranding();
+  // plans
+  document.getElementById('plans-list').innerHTML=plans.map(p=>`
+    <div class="block-row" style="background:var(--surface);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);">
+      <div><div style="font-weight:600;font-size:14px;">${p.name}</div><div style="font-size:12px;color:var(--silver-dim);">$${p.price.toLocaleString()}</div></div>
+      <button class="btn btn-sm-red" onclick="deletePlan('${p.id}')">Eliminar</button>
+    </div>`).join('');
+  // staff
+  document.getElementById('staff-list').innerHTML=staffList.map(s=>`
+    <div class="block-row" style="background:var(--surface);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);">
+      <div><div style="font-weight:600;font-size:14px;">${s.name}</div><div style="font-size:12px;color:var(--silver-dim);">${s.email}</div></div>
+      <button class="btn btn-sm-red" onclick="deleteStaff('${s.id}')">Eliminar</button>
+    </div>`).join('');
+}
+
+function saveGymName(){
+  const n=document.getElementById('settings-gym-name').value.trim();
+  if(!n){ showToast('Escribe un nombre','#ef4444'); return; }
+  gymName=n; save('gymName',gymName); applyBranding(); showToast('✅ Nombre guardado');
+}
+
+function changeAdminPass(){
+  const p=document.getElementById('new-admin-pass').value;
+  if(p.length<6){ showToast('Mínimo 6 caracteres','#ef4444'); return; }
+  adminPass=p; save('adminPass',adminPass); document.getElementById('new-admin-pass').value=''; showToast('✅ Contraseña actualizada');
+}
+
+// Logo upload
+function handleLogoUpload(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{ gymLogo=ev.target.result; save('gymLogo',gymLogo); applyBranding(); showToast('✅ Logo actualizado'); };
+  reader.readAsDataURL(file);
+}
+function removeLogo(){ gymLogo=null; save('gymLogo',null); applyBranding(); showToast('Logo eliminado'); }
+
+// Plans
+function openAddPlan(){ document.getElementById('plan-name').value=''; document.getElementById('plan-price').value=''; openModal('modal-add-plan'); }
+function submitAddPlan(){
+  const name=document.getElementById('plan-name').value.trim();
+  const price=parseFloat(document.getElementById('plan-price').value);
+  if(!name||!price){ showToast('Nombre y precio requeridos','#ef4444'); return; }
+  plans.push({id:'p'+Date.now(),name,price}); save('plans',plans); closeModal('modal-add-plan'); renderSettings(); showToast('✅ Plan agregado');
+}
+function deletePlan(id){ plans=plans.filter(p=>p.id!==id); save('plans',plans); renderSettings(); showToast('Plan eliminado'); }
+
+// Staff
+function openAddStaff(){ document.getElementById('staff-name').value=''; document.getElementById('staff-email').value=''; document.getElementById('staff-pass').value=''; openModal('modal-add-staff'); }
+function submitAddStaff(){
+  const name=document.getElementById('staff-name').value.trim();
+  const email=document.getElementById('staff-email').value.trim();
+  const pass=document.getElementById('staff-pass').value;
+  if(!name||!email||!pass){ showToast('Todos los campos son requeridos','#ef4444'); return; }
+  staffList.push({id:'s'+Date.now(),name,email,pass,role:'staff'}); save('staff',staffList); closeModal('modal-add-staff'); renderSettings(); showToast('✅ Colaborador agregado');
+}
+function deleteStaff(id){ staffList=staffList.filter(s=>s.id!==id); save('staff',staffList); renderSettings(); showToast('Colaborador eliminado'); }
+
+// ══════════════════════════════════════════
+//  CLIENT ACCOUNT
+// ══════════════════════════════════════════
+function renderClientAccount(){
+  const m=members.find(m=>m.id===currentUser.memberId); if(!m) return;
+  const pays=[...m.payments].reverse();
+  const total=pays.filter(p=>p.status==='pagado').reduce((s,p)=>s+p.amount,0);
+  document.getElementById('client-payments-list').innerHTML=`
+    <div class="block" style="margin-bottom:16px;">
+      <div class="block-row"><span class="block-row-label">Total pagado</span><span class="block-row-value" style="color:var(--green)">$${total.toLocaleString()}</span></div>
+    </div>
+    <div class="block">${pays.map(p=>`
+      <div class="pay-row">
+        <div><div class="pay-concept">${p.concept}</div><div class="pay-date">${new Date(p.date).toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'})}</div></div>
+        <div style="text-align:right;"><div class="pay-amount" style="color:${p.status==='pagado'?'var(--green)':'var(--yellow)'}">$${p.amount.toLocaleString()}</div><span class="badge ${p.status==='pagado'?'badge-green':'badge-yellow'}">${p.status}</span></div>
+      </div>`).join('')}</div>`;
+}
+
+// ══════════════════════════════════════════
+//  ADD MEMBER
+// ══════════════════════════════════════════
+function openAddMember(){
+  document.getElementById('new-name').value=''; document.getElementById('new-phone').value='';
+  document.getElementById('new-email').value=''; document.getElementById('new-client-pass').value='';
+  // populate plan select
+  const sel=document.getElementById('new-plan');
+  sel.innerHTML=plans.map(p=>`<option value="${p.id}">${p.name} — $${p.price.toLocaleString()}</option>`).join('');
+  // class toggles
+  const grid=document.getElementById('new-class-toggles');
+  grid.innerHTML=classes.map(c=>`<button class="class-toggle" id="ct-${c.id}" onclick="toggleClassBtn(${c.id})">${c.name}</button>`).join('');
+  openModal('modal-add-member');
+}
+function toggleClassBtn(id){ document.getElementById('ct-'+id)?.classList.toggle('selected'); }
+function submitAddMember(){
+  const name=document.getElementById('new-name').value.trim();
+  const phone=document.getElementById('new-phone').value.trim();
+  if(!name||!phone){ showToast('Nombre y teléfono son obligatorios','#ef4444'); return; }
+  const plan=document.getElementById('new-plan').value;
+  const email=document.getElementById('new-email').value.trim();
+  const clientPass=document.getElementById('new-client-pass').value;
+  const selectedClasses=classes.filter(c=>document.getElementById('ct-'+c.id)?.classList.contains('selected')).map(c=>c.id);
+  const planObj=plans.find(p=>p.id===plan)||{price:0};
+  members.push({id:Date.now(),name,phone,email,clientPass,classes:selectedClasses,plan,joined:today,active:true,
+    payments:[{id:Date.now(),date:today,amount:planObj.price,concept:'Alta '+planObj.name,status:'pendiente'}]
+  });
+  save('members',members); closeModal('modal-add-member'); renderMembers(); showToast('✅ Miembro registrado');
+}
+
+// ══════════════════════════════════════════
+//  ADD PAYMENT
+// ══════════════════════════════════════════
+function openAddPayment(){
+  const m=members.find(m=>m.id===detailMemberId);
+  document.getElementById('pay-modal-member-name').textContent=m?m.name:'—';
+  document.getElementById('pay-concept').value=''; document.getElementById('pay-amount').value='';
+  document.getElementById('pay-date').value=today; document.getElementById('pay-status').value='pagado';
+  openModal('modal-add-payment');
+}
+function submitAddPayment(){
+  const concept=document.getElementById('pay-concept').value.trim();
+  const amount=parseFloat(document.getElementById('pay-amount').value);
+  if(!concept||!amount){ showToast('Concepto y monto son obligatorios','#ef4444'); return; }
+  const m=members.find(m=>m.id===detailMemberId); if(!m) return;
+  m.payments.push({id:Date.now(),date:document.getElementById('pay-date').value||today,amount,concept,status:document.getElementById('pay-status').value});
+  save('members',members); closeModal('modal-add-payment'); renderMemberDetail(); showToast('✅ Pago registrado');
+}
+
+function markPaid(memberId,payId){
+  const m=members.find(m=>m.id===memberId); if(!m) return;
+  const p=m.payments.find(p=>p.id===payId); if(p) p.status='pagado';
+  save('members',members); showToast('✅ Pago cobrado');
+}
+
+// ══════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function hideFab(){ const f=document.getElementById('fab-add-member'); if(f) f.style.display='none'; }
+function showToast(msg,bg='#22c55e'){
+  const t=document.getElementById('toast'); t.textContent=msg; t.style.background=bg;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200);
+}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
+</script>
+</body>
+</html>
