@@ -1,4 +1,3 @@
-rm /mnt/user-data/outputs/index.html
 python3 << 'PYEOF'
 html = r"""<!DOCTYPE html>
 <html lang="es">
@@ -696,8 +695,3 @@ document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',e=>{if(e.
 </script>
 </body>
 </html>"""
-
-with open('/mnt/user-data/outputs/index.html','w') as f:
-    f.write(html)
-print("Written:", len(html), "chars")
-PYEOF
