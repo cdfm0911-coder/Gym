@@ -436,10 +436,10 @@ const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const SB={
   async q(table,opts={}){
     let url=SB_URL+'/rest/v1/'+table+'?';
-    if(opts.select) url+='select='+opts.select+'&';
+    url+='select='+(opts.select||'*')+'&';
     if(opts.filter) url+=opts.filter+'&';
     if(opts.order) url+='order='+opts.order+'&';
-    const r=await fetch(url,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'}});
+    const r=await fetch(url,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Accept':'application/json'}});
     return r.json();
   },
   async ins(table,data){
@@ -454,11 +454,13 @@ const SB={
     await fetch(SB_URL+'/rest/v1/'+table+'?'+filter,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
   },
   async setSetting(key,value){
-    await fetch(SB_URL+'/rest/v1/settings?key=eq.'+key,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({value})});
+    await fetch(SB_URL+'/rest/v1/settings?key=eq.'+key,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({value})});
   },
   async getSetting(key){
-    const r=await this.q('settings',{filter:'key=eq.'+key});
-    return r&&r[0]?r[0].value:'';
+    try{
+      const r=await this.q('settings',{filter:'key=eq.'+encodeURIComponent(key)});
+      return r&&r[0]?r[0].value:'';
+    }catch(e){return '';}
   }
 };
 
@@ -491,6 +493,7 @@ function buildWAMsg(m,pl,ren,dy){
 // INIT
 async function init(){
   document.getElementById('scr-loading').style.display='flex';
+  console.log('Connecting to Supabase:', SB_URL);
   try{
     const [s_name,s_logo,s_pass,s_wanum,s_wamsg]=await Promise.all([
       SB.getSetting('gym_name'),SB.getSetting('gym_logo'),SB.getSetting('admin_pass'),
@@ -513,7 +516,13 @@ async function init(){
     members.forEach(m=>{m.payments=payments.filter(p=>p.member_id===m.id);});
     const resRows=await SB.q('reservations',{select:'*',filter:'date=gte.'+today});
     reservations=resRows||[];
-  }catch(e){console.error(e);}
+  }catch(e){
+    console.error('Supabase error:',e);
+    document.getElementById('scr-loading').style.display='none';
+    document.getElementById('scr-login').classList.add('active');
+    alert('Error conectando a la base de datos: '+e.message);
+    return;
+  }
   document.getElementById('scr-loading').style.display='none';
   applyBrand();
   document.getElementById('scr-login').classList.add('active');
